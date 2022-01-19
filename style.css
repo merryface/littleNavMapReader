@@ -1,0 +1,26 @@
+h1 {
+  color: rgb(12, 12, 122);
+  width: 100%;
+  text-align: center;
+}
+
+p {
+  width: 100%;
+  text-align: center;
+}
+
+input {
+  margin-top: 5rem;
+  margin-left: 10%;
+}
+
+#output {
+  width: 100%;
+  max-width: 80vw;
+  margin: 2rem 10%;
+  min-height: 20px;
+  border-radius: 5px;
+  background: grey;
+  border: 1px solid black;
+  font-family: sans-serif;
+}

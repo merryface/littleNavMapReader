@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>LitteNavMap Translator</title>
+</head>
+<body>
+  <h1>Little NavMap to Airport List Converter</h1>
+  <p>Upload a littleNavMap file and get a list of all the airports in the route</p>
+    <input type="file" name="inputfile"
+            id="inputfile">
+    <p id="output">
+
+    </p>
+      
+    <script type="text/javascript">
+        document.getElementById('inputfile')
+            .addEventListener('change', function() {
+            let fr=new FileReader();
+            fr.onload=function(){
+              text = fr.result;
+              airportsData = fr.result.split(`\n`);
+              let airports = [];
+
+              airportsData.forEach(line => {
+                if (line.substr(9)[0] == "I") {
+                  airports.push(line.substr(7).slice(8,-9))
+                }
+              })
+              let output = airports.join(", ");
+
+              document.getElementById('output').textContent=output;
+            }
+              
+            fr.readAsText(this.files[0]);
+        })
+    </script>
+</body>
+</html>
