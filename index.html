@@ -20,7 +20,6 @@
         <label for="inputfile" class="button">Upload .lnmpln file</label>
         <input type="file" name="inputfile" id="inputfile" class="hidden">
       </div>
-
     </div>
 
     <div class="outputData">
@@ -53,6 +52,42 @@
 
       
     <script type="text/javascript">
+      function toDegreesMinutesAndSeconds(coordinate) {
+        let absolute = Math.abs(coordinate);
+        let degrees = Math.floor(absolute);
+        let minutesNotTruncated = (absolute - degrees) * 60;
+        let minutes = Math.floor(minutesNotTruncated);
+        let seconds = Math.floor((minutesNotTruncated - minutes) * 60);
+
+        //return degrees + " " + minutes + " " + seconds;
+        return `${degrees}${minutes}`;
+    }
+
+    function convertDMS(lat, lng) {
+        let latitude = toDegreesMinutesAndSeconds(lat);
+        let latitudeCardinal = lat >= 0 ? "N" : "S";
+
+        if (latitude.length < 4) {
+          latitude += "0"
+        }
+        if (latitude.length < 3) {
+          latitude += "0"
+        }
+
+        let longitude = toDegreesMinutesAndSeconds(lng);
+        if (longitude < 10000) {
+          longitude = "0" + longitude;
+        }
+        if (longitude < 1000) {
+          longitude = "0" + longitude;
+        }
+
+
+        let longitudeCardinal = lng >= 0 ? "E" : "W";
+
+        return `${latitude}${latitudeCardinal}${longitude}${longitudeCardinal}`;
+    }
+
         document.getElementById('inputfile')
             .addEventListener('change', function() {
             let fr=new FileReader();
@@ -64,11 +99,16 @@
 
               planData.forEach(line => {
                 if (line.substr(9)[0] == "I") {
-                  airports.push(line.substr(7).slice(8,-9))
+                  let airportElement = line.match("<Ident>(.*?)</Ident>");
+                  airports.push(airportElement[1]);
                 }
 
                 if (line.substr(9)[0] == "P") {
-                  routeInfo.push(line.substr(5).slice(8,-16))
+                  let long = line.match(`Lon="(.*?)"`)[1];
+                  let lat = line.match(`Lat="(.*?)"`)[1];
+
+                  routeInfo.push(convertDMS(lat, long))
+                  //routeInfo.push(line.substr(5).slice(8,-16))
                 }
               })
               let summary = airports.join(" ");
