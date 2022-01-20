@@ -67,11 +67,11 @@
                 }
 
                 if (line.substr(9)[0] == "P") {
-                  routeInfo.push(line.substr(5).slice(8,-17))
+                  routeInfo.push(line.substr(5).slice(8,-16))
                 }
               })
               let summary = airports.join(" ");
-              let info = routeInfo.join(` || `);
+              let info = routeInfo.join(" \n ");
 
 
               //Departure
@@ -84,7 +84,7 @@
               document.getElementById('routeSummary').textContent=summary;
 
               // Route info
-              document.getElementById('routeData').textContent=info;
+              document.getElementById('routeData').innerText=info;
             }
               
             fr.readAsText(this.files[0]);
