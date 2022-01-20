@@ -8,13 +8,48 @@
   <title>LitteNavMap Translator</title>
 </head>
 <body>
-  <h1>Little NavMap to Airport List Converter</h1>
-  <p>Upload a littleNavMap file and get a list of all the airports in the route</p>
-    <input type="file" name="inputfile"
-            id="inputfile">
-    <p id="output">
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Little NavMap to Airport List Converter</h1>
+      <p class="subtitle">Upload a littleNavMap file and get a list of all the airports in the route</p>
+    </header>
 
-    </p>
+    <div class="inputData">
+      <div class="button-wrap">
+        <label for="inputfile" class="button">Upload .lnmpln file</label>
+        <input type="file" name="inputfile" id="inputfile" class="hidden">
+      </div>
+
+    </div>
+
+    <div class="outputData">
+      <div class="topLine">
+        <div class="departure hub">
+          <p class="label">Departure:</p>
+          <p id="departureAirport"></p>
+        </div>
+
+        <div class="destination hub">
+          <p class="label">Destination:</p>
+          <p id="destinationAirport"></p>
+        </div>
+      </div>
+
+      <div class="dataLine">
+        <p class="label">Route Summary:</p>
+        <p id="routeSummary"></p>
+      </div>
+
+      <div class="dataLine">
+        <p class="label">Routing Data:</p>
+        <p id="routeData"></p>
+      </div>
+
+
+    </div>
+
+  </div>
+
       
     <script type="text/javascript">
         document.getElementById('inputfile')
@@ -22,17 +57,34 @@
             let fr=new FileReader();
             fr.onload=function(){
               text = fr.result;
-              airportsData = fr.result.split(`\n`);
+              planData = fr.result.split(`\n`);
               let airports = [];
+              let routeInfo = [];
 
-              airportsData.forEach(line => {
+              planData.forEach(line => {
                 if (line.substr(9)[0] == "I") {
                   airports.push(line.substr(7).slice(8,-9))
                 }
-              })
-              let output = airports.join(", ");
 
-              document.getElementById('output').textContent=output;
+                if (line.substr(9)[0] == "P") {
+                  routeInfo.push(line.substr(5).slice(8,-17))
+                }
+              })
+              let summary = airports.join(" ");
+              let info = routeInfo.join(` || `);
+
+
+              //Departure
+              document.getElementById('departureAirport').textContent=airports[0];
+
+              //Destination
+              document.getElementById('destinationAirport').textContent=airports[airports.length-1];
+
+              // Route summary
+              document.getElementById('routeSummary').textContent=summary;
+
+              // Route info
+              document.getElementById('routeData').textContent=info;
             }
               
             fr.readAsText(this.files[0]);
