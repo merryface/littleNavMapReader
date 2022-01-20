@@ -40,13 +40,17 @@ const convertDMS = (lat, lng) => {
       .addEventListener('change', function() {
       const fr=new FileReader();
       fr.onload=function(){
+        // turn data into text
         text = fr.result;
+
+        // Split the strings into an array, one item per line
         planData = fr.result.split(`\n`);
+
         let airports = [];
         let routeInfo = [];
 
-        // Add all airport ICAOs into array
         planData.forEach(line => {
+          // Add all airport ICAOs into array
           if (line.substr(9)[0] == "I") {
             const airportElement = line.match("<Ident>(.*?)</Ident>");
             airports.push(airportElement[1]);
