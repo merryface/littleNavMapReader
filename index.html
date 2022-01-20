@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./style.css">
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <script src="./index.js" defer></script>
   <title>LitteNavMap Translator</title>
 </head>
 <body>
   <div class="container">
     <header class="header">
-      <h1 class="title">Little NavMap to Airport List Converter</h1>
+      <h1 class="title">LittleNavMap to Airport List Converter</h1>
       <p class="subtitle">Upload a littleNavMap file and get a list of all the airports in the route</p>
     </header>
 
@@ -44,93 +45,9 @@
         <p class="label">Routing Data:</p>
         <p id="routeData"></p>
       </div>
-      <p class="tooltip">Copy the information from the Routing box and paste it into <a href="https://skyvector.com/">SkyVector</a> to get the route</p>
-
-
-    </div>
-
-  </div>
-
       
-    <script type="text/javascript">
-      function toDegreesMinutesAndSeconds(coordinate) {
-        let absolute = Math.abs(coordinate);
-        let degrees = Math.floor(absolute);
-        let minutesNotTruncated = (absolute - degrees) * 60;
-        let minutes = Math.floor(minutesNotTruncated);
-        let seconds = Math.floor((minutesNotTruncated - minutes) * 60);
-
-        //return degrees + " " + minutes + " " + seconds;
-        return `${degrees}${minutes}`;
-    }
-
-    function convertDMS(lat, lng) {
-        let latitude = toDegreesMinutesAndSeconds(lat);
-        let latitudeCardinal = lat >= 0 ? "N" : "S";
-
-        if (latitude.length < 4) {
-          latitude += "0"
-        }
-        if (latitude.length < 3) {
-          latitude += "0"
-        }
-
-        let longitude = toDegreesMinutesAndSeconds(lng);
-        if (longitude < 10000) {
-          longitude = "0" + longitude;
-        }
-        if (longitude < 1000) {
-          longitude = "0" + longitude;
-        }
-
-
-        let longitudeCardinal = lng >= 0 ? "E" : "W";
-
-        return `${latitude}${latitudeCardinal}${longitude}${longitudeCardinal}`;
-    }
-
-        document.getElementById('inputfile')
-            .addEventListener('change', function() {
-            let fr=new FileReader();
-            fr.onload=function(){
-              text = fr.result;
-              planData = fr.result.split(`\n`);
-              let airports = [];
-              let routeInfo = [];
-
-              planData.forEach(line => {
-                if (line.substr(9)[0] == "I") {
-                  let airportElement = line.match("<Ident>(.*?)</Ident>");
-                  airports.push(airportElement[1]);
-                }
-
-                if (line.substr(9)[0] == "P") {
-                  let long = line.match(`Lon="(.*?)"`)[1];
-                  let lat = line.match(`Lat="(.*?)"`)[1];
-
-                  routeInfo.push(convertDMS(lat, long))
-                  //routeInfo.push(line.substr(5).slice(8,-16))
-                }
-              })
-              let summary = airports.join(" ");
-              let info = routeInfo.join(" \n ");
-
-
-              //Departure
-              document.getElementById('departureAirport').textContent=airports[0];
-
-              //Destination
-              document.getElementById('destinationAirport').textContent=airports[airports.length-1];
-
-              // Route summary
-              document.getElementById('routeSummary').textContent=summary;
-
-              // Route info
-              document.getElementById('routeData').innerText=info;
-            }
-              
-            fr.readAsText(this.files[0]);
-        })
-    </script>
+      <p class="tooltip">Copy the information from the Routing box and paste it into <a href="https://skyvector.com/">SkyVector</a> to get the route</p>
+    </div>
+  </div>
 </body>
 </html>
