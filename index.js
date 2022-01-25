@@ -47,6 +47,7 @@ const convertDMS = (lat, lng) => {
         planData = fr.result.split(`\n`);
 
         let airports = [];
+        let names = [];
         let routeInfo = [];
 
         planData.forEach(line => {
@@ -54,6 +55,12 @@ const convertDMS = (lat, lng) => {
           if (line.substr(9)[0] == "I") {
             const airportElement = line.match("<Ident>(.*?)</Ident>");
             airports.push(airportElement[1]);
+          }
+
+          // add all airport names into array
+          if (line.substr(9)[0] == "N") {
+            const airportElement = line.match("<Name>(.*?)</Name>");
+            names.push(airportElement[1]);
           }
 
           // Add all coordinates into array
@@ -67,6 +74,7 @@ const convertDMS = (lat, lng) => {
 
         // create strings to be output
         const summary = airports.join(" ");
+        const airportNames = names.join(" \n "); 
         const info = routeInfo.join(" \n ");
 
 
@@ -78,6 +86,13 @@ const convertDMS = (lat, lng) => {
 
         // Route summary
         document.getElementById('routeSummary').textContent=summary;
+
+        // Airport Names
+        names.forEach(name => {
+          let text = document.createElement("p");
+          text.textContent = name;
+          document.getElementById('airportNames').appendChild(text);
+        })
 
         // Route info
         document.getElementById('routeData').innerText=info;
